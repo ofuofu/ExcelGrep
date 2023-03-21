@@ -22,7 +22,7 @@ class SearchExcel:
         if not targetPath.exists():            
             # print('Pathが存在しません。')
             # return
-            self.logger.dubug('Pathが存在しません。')
+            self.logger.outDebug('Pathが存在しません。')
             raise AppWarnException('Pathが存在しません。')
             
         # '**'⇒フォルダとサブフォルダ
@@ -30,6 +30,7 @@ class SearchExcel:
         for file in targetPath.glob('**/*'):
             # self.logger.debug(str(file))
             if file.is_file() and pattern.search(str(file)):
+                self.logger.outDebug(str(file))
                 self.excelSearch(str(file), keyword1, keyword2, condition)
         
         return self.resultList

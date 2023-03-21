@@ -5,7 +5,7 @@ class ExcelGrepLogger:
     def __init__(self):
 
         dt = datetime.datetime.now()
-        dtStr = dt.strftime("%Y%m%d")
+        # dtStr = dt.strftime("%Y%m%d")
 
         self.logger = getLogger(__name__)
         # Formatter
@@ -18,26 +18,26 @@ class ExcelGrepLogger:
         self.debHandler.setLevel(DEBUG)
         self.debHandler.setFormatter(formatter)
         
-        self.errHanler = FileHandler(f"err_{dtStr}.log")
-        self.errHanler.setLevel(ERROR)
-        self.errHanler.setFormatter(formatter)
+#        self.errHanler = FileHandler(f"err_{dtStr}.log")
+#        self.errHanler.setLevel(ERROR)
+#        self.errHanler.setFormatter(formatter)
                 
         self.logger.setLevel(DEBUG)
         
         self.logger.addHandler(self.debHandler)
-        self.logger.addHandler(self.errHanler)
+#        self.logger.addHandler(self.errHanler)
 
-    def debug(self, msg):
+    def outDebug(self, msg):
         self.logger.debug(msg)
 
-    def info(self, msg):
+    def outInfo(self, msg):
         self.logger.info(msg)        
 
-    def warning(self, msg):
+    def outWarning(self, msg):
         self.logger.warning(msg)
         
-    def error(self, msg):
+    def outError(self, msg):
         self.logger.error(msg)
     
-    def critical(self, msg):
+    def outCritical(self, msg):
         self.logger.critical(msg)        
