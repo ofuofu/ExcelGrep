@@ -30,8 +30,10 @@ class SearchExcel:
         for file in targetPath.glob('**/*'):
             # self.logger.debug(str(file))
             if file.is_file() and pattern.search(str(file)):
-                self.logger.outDebug(str(file))
-                self.excelSearch(str(file), keyword1, keyword2, condition)
+                # ロックファイルを除外する。
+                if not file.name.startswith('~$'):
+                    self.logger.outDebug(str(file))
+                    self.excelSearch(str(file), keyword1, keyword2, condition)
         
         return self.resultList
 
