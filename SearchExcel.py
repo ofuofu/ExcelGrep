@@ -11,7 +11,7 @@ class SearchExcel:
     def __init__(self):
         self.logger = ExcelGrepLogger()
 
-    def search(self, path, keyword1, keyword2, condition):
+    def search(self, path, keyword1, keyword2, condition, fileName):
         # Pathオブジェクト生成
         targetPath = Path(path)
         
@@ -31,10 +31,11 @@ class SearchExcel:
             # self.logger.debug(str(file))
             if file.is_file() and pattern.search(str(file)):
                 # ロックファイルを除外する。
-                if not file.name.startswith('~$'):
-                    self.logger.outDebug(str(file))
-                    self.excelSearch(str(file), keyword1, keyword2, condition)
-        
+                if not file.name.startswith('~$'):                                        
+                    if (fileName == "") or (fileName in file.name) : 
+                        # ファイル名指定なし もしくは ファイル名を含む
+                        self.logger.outDebug(str(file))
+                        self.excelSearch(str(file), keyword1, keyword2, condition)        
         return self.resultList
 
     def excelSearch(self, bookPath, keyword1, keyword2, condition):

@@ -41,26 +41,26 @@ class Application(tk.Frame):
             fg='white'
         )
         self.SearchValueLabe2.grid(row=2,column=1)
-
-        self.SearchValueLabel3 = tk.Label(
-            self.master,
-            width=18,
-            font = ('Meiryo UI', 12),
-            text="検索ワード３",
-            bg='green4',
-            fg='white'
-        )
-        self.SearchValueLabel3.grid(row=3,column=1)
         
         self.SearchCondLabel = tk.Label(
             self.master,
             width=18,
             font = ('Meiryo UI', 12),
-            text='組合せ条件',
+            text='検索ワードの組合せ条件',
             bg='green4',
             fg='white'
         )
-        self.SearchCondLabel.grid(row=4,column=1)
+        self.SearchCondLabel.grid(row=3,column=1)
+
+        self.SearchFileNameLabel = tk.Label(
+            self.master,
+            width=18,
+            font = ('Meiryo UI', 12),
+            text="ファイル名に含まれる文字",
+            bg='green4',
+            fg='white'
+        )
+        self.SearchFileNameLabel.grid(row=4,column=1)
 
         self.PathLabel = tk.Label(
             self.master,
@@ -89,15 +89,17 @@ class Application(tk.Frame):
             textvariable="",
             )
         self.SearchValue2Text.grid(row=2,column=2,ipadx=1,ipady=1,padx=1,pady=1,columnspan=2,sticky = tk.W+tk.E)
-        self.SearchValue3Text = tk.Entry(
+        
+        self.SearchFileNameText = tk.Entry(
             self.master,
             width=40,
             font = ('Meiryo UI', 11),
             justify=tk.LEFT,
             textvariable="",
-            state=tk.DISABLED
+            # state=tk.DISABLED
             )
-        self.SearchValue3Text.grid(row=3,column=2,ipadx=1,ipady=1,padx=1,pady=1,columnspan=2,sticky = tk.W+tk.E)
+        self.SearchFileNameText.grid(row=4,column=2,ipadx=1,ipady=1,padx=1,pady=1,columnspan=2,sticky = tk.W+tk.E)
+        
         self.TargetPathText = tk.Entry(
             self.master,
             width=40,
@@ -127,7 +129,7 @@ class Application(tk.Frame):
                                        command=self.AndOraRadioClickHandle,
                                        variable=self.AndOraRadioValue,
                                        value=0)
-        self.AndRadio.grid(row=4,column=2)#,ipadx=1,ipady=1,padx=1,pady=1)
+        self.AndRadio.grid(row=3,column=2)#,ipadx=1,ipady=1,padx=1,pady=1)
         self.OrRadio = tk.Radiobutton(self.master,
                                       text="OR",
                                       font = ('Meiryo UI', 10),
@@ -135,7 +137,7 @@ class Application(tk.Frame):
                                       variable=self.AndOraRadioValue,
                                       value=1,
                                       state=tk.DISABLED)
-        self.OrRadio.grid(row=4,column=3)#,ipadx=1,ipady=1,padx=1,pady=1)
+        self.OrRadio.grid(row=3,column=3)#,ipadx=1,ipady=1,padx=1,pady=1)
          
         # 表
         self.ResultTable=ttk.Treeview(
@@ -206,6 +208,7 @@ class Application(tk.Frame):
         # コントールから値を取得
         searchWord1 = self.SearchValue1Text.get()
         searchWord2 = self.SearchValue2Text.get()
+        searchFileName = self.SearchFileNameText.get()
         targetPath = self.TargetPathText.get()
         radioValue = self.AndOraRadioValue.get()
         
@@ -233,7 +236,7 @@ class Application(tk.Frame):
         
         searchExcelObj = SearchExcel()
         try:
-            dataList = searchExcelObj.search(targetPath, searchWord1, searchWord2, radioValue)
+            dataList = searchExcelObj.search(targetPath, searchWord1, searchWord2, radioValue, searchFileName)
         except AppWarnException as ex:
             msgbox.showwarning('Excel Grep', ex.ErrMsg)
             return        
@@ -244,6 +247,9 @@ class Application(tk.Frame):
             index = index + 1
 
     def ResultTableDoubleClickHandle(self, event):
+        region = self.ResultTable.identify_region(event.x, event.y)
+        if region == 'heading':
+            return
         item = self.ResultTable.selection()[0]
         values = self.ResultTable.item(item, "values")        
 #        print("Selected item:", values[1])
